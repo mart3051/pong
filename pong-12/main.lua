@@ -109,6 +109,7 @@ end
     Called by LÖVE whenever we resize the screen; here, we just want to pass in the
     width and height to push so our virtual resolution can be resized as needed.
 ]]
+expectedLast=0
 function love.resize(w, h)
     push:resize(w, h)
 end
@@ -204,14 +205,17 @@ function love.update(dt)
             end
         end
     end
-
-    -- player 1 movement
-    if love.keyboard.isDown('w') then
+    expectedCurrent=ball:expectedLocation() 
+    -- player 1 movement and math.abs(math.abs(expectedCurrent)-math.abs(expectedLast))>1 
+    if  expectedCurrent-10<player1.y and ball.dx<0  then
         player1.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('s') then
+       -- expectedLast=expectedCurrent
+    elseif expectedCurrent-10>player1.y and ball.dx<0  then
         player1.dy = PADDLE_SPEED
+        --expectedLast=expectedCurrent
     else
         player1.dy = 0
+        --expectedLast=expectedCurrent
     end
 
     -- player 2 movement
@@ -321,7 +325,8 @@ function displayFPS()
     -- simple FPS display across all states
     love.graphics.setFont(smallFont)
     love.graphics.setColor(0, 255, 0, 255)
-    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
+    --love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
+    --love.graphics.print('Expected location: ' .. tostring(ball:expectedLocation()) ..' ' .. tostring(player1.y) ,10,10)
 end
 
 --[[
