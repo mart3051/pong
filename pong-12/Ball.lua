@@ -19,7 +19,7 @@ function Ball:init(x, y, width, height)
     self.y = y
     self.width = width
     self.height = height
-
+    
     -- these variables are for keeping track of our velocity on both the
     -- X and Y axis, since the ball can move in two dimensions
     self.dy = math.random(2) == 1 and -100 or 100
@@ -68,4 +68,18 @@ end
 
 function Ball:render()
     love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+end
+
+
+function Ball:expectedLocation()
+    m =        (self.dy/self.dx)
+    c =        self.y - m*self.x
+    expectedY =  math.floor(m*13+c)
+    if expectedY < 0 then
+        return 0
+    elseif expectedY >= VIRTUAL_HEIGHT then
+        return VIRTUAL_HEIGHT-20
+    else
+        return expectedY
+    end    
 end
